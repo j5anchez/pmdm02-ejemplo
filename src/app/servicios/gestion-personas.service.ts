@@ -1,36 +1,42 @@
-import { IPersona } from './../interfaces/mis-interfaces';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { GestionStorageService } from './gestion-storage.service';
+/* eslint-disable eqeqeq */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable object-shorthand */
+/* eslint-disable prefer-const */
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+import {IPersona} from './../interfaces/mis-interfaces';
+import {GestionStorageService} from './gestion-storage.service';
+
+@Injectable({providedIn: 'root'})
 export class GestionPersonasService {
   private personas: IPersona[] = [];
 
-  constructor(private leerFichero: HttpClient, private gestionAlmacen: GestionStorageService) {
+  constructor(
+      private leerFichero: HttpClient,
+      private gestionAlmacen: GestionStorageService) {
     this.getPersonasFichero();
-    let datosPromesa: Promise<IPersona[]> = gestionAlmacen.getObject("personas");
+    let datosPromesa: Promise<IPersona[]> =
+        gestionAlmacen.getObject('personas');
 
-    datosPromesa.then( datos => {
+    datosPromesa.then(datos => {
       console.log(datos);
       this.personas.push(...datos);
     });
   }
 
   getPersonasFichero() {
-    let datosFichero: Observable<IPersona[]>;
-    /*
-    datosFichero = this.leerFichero.get<IPersona[]>("/assets/datos/personas.json");
+    // let datosFichero: Observable<IPersona[]>;
 
-    datosFichero.subscribe(datos => {
-      console.log(datos);
-      this.personas.push(...datos);
-      this.gestionAlmacen.setObject("personas", this.personas);
-    });
-    */
+    // datosFichero =
+    //     this.leerFichero.get<IPersona[]>('/assets/datos/personas.json');
+
+    // datosFichero.subscribe(datos => {
+    //   console.log(datos);
+    //   this.personas.push(...datos);
+    //   this.gestionAlmacen.setObject('personas', this.personas);
+    // });
   }
 
   getPersonas() {
@@ -40,32 +46,30 @@ export class GestionPersonasService {
   // Insertar una nueva persona
   insertarPersona(id: string, nombre: string, apellido: string) {
     // Creamos la nueva IPersona
-    let nuevaPersona: IPersona = {
-      id: id,
-      nombre: nombre,
-      apellido: apellido
-    };
+    let nuevaPersona: IPersona = {id: id, nombre: nombre, apellido: apellido};
 
     // La insertamos
     this.personas.push(nuevaPersona);
-    this.gestionAlmacen.setObject("personas", this.personas);
+    this.gestionAlmacen.setObject('personas', this.personas);
 
-    // this.personas = [...this.personas, nuevaPersona];  // Crea una copia del array para que el array sea inmutable
+    // this.personas = [...this.personas, nuevaPersona];  // Crea una copia del
+    // array para que el array sea inmutable
 
     console.log(this.personas);
-
-
   }
 
   // Borra la persona con el id dado
   borrarPersona(id: string) {
-
-    // Busca la persona con el id dado. Utiliza una función anónima como parámetro
-    let personaEncontrada: IPersona = this.personas.find(function(cadaPersona) { return cadaPersona.id == id });
+    // Busca la persona con el id dado. Utiliza una función anónima como
+    // parámetro
+    let personaEncontrada: IPersona = this.personas.find(function(cadaPersona) {
+      return cadaPersona.id == id;
+    });
 
     // Busca la persona con el id dado. Utiliza una función arrow como parámetro
-    // let personaEncontrada: IPersona = this.personas.find((cadaPersona) => cadaPersona.id == id );
-    
+    // let personaEncontrada: IPersona = this.personas.find((cadaPersona) =>
+    // cadaPersona.id == id );
+
     console.log(personaEncontrada);
     if (personaEncontrada) {
       // Busca el índice de la persona
@@ -75,24 +79,28 @@ export class GestionPersonasService {
       if (indice != -1) {
         // Borra la persona con el índice obtenido
         this.personas.splice(indice, 1);
-        this.gestionAlmacen.setObject("personas", this.personas);
+        this.gestionAlmacen.setObject('personas', this.personas);
 
         // Genera un nuevo array sin el elemento a borrar y lo asigna
-        // let inicio = this.personas.slice(0, indice);             // Copia primera parte del array
-        // let final= this.personas.slice(indice + 1);              // Copia la parte final
-        // this.personas = [...inicio, ...final];                   // Añade todos los elementos copiados
-        
+        // let inicio = this.personas.slice(0, indice);             // Copia
+        // primera parte del array let final= this.personas.slice(indice + 1);
+        // // Copia la parte final this.personas = [...inicio, ...final]; //
+        // Añade todos los elementos copiados
+
         console.log(this.personas);
       }
     }
   }
-  
+
   modificarPersona(id: string, nombre: string, apellido: string) {
-    // Busca la persona con el id dado. Utiliza una función anónima como parámetro
-    let personaEncontrada: IPersona = this.personas.find(function(cadaPersona) { return cadaPersona.id == id });
+    // Busca la persona con el id dado. Utiliza una función anónima como
+    // parámetro
+    let personaEncontrada: IPersona = this.personas.find(function(cadaPersona) {
+      return cadaPersona.id == id;
+    });
     let indice: number = this.personas.indexOf(personaEncontrada);
     this.personas[indice].nombre = nombre;
     this.personas[indice].apellido = apellido;
-    this.gestionAlmacen.setObject("personas", this.personas);
+    this.gestionAlmacen.setObject('personas', this.personas);
   }
 }
